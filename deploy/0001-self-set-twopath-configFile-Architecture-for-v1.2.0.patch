@@ -1,0 +1,46 @@
+From f4257ed6176a79000f31e64bdb935736acd47418 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E7=8E=8B=E5=A3=AB=E5=BD=AC?= <wangshibin@inspur.com>
+Date: Mon, 26 Oct 2020 19:37:36 +0800
+Subject: [PATCH] self-set-twopath-configFile-Architecture-for-v1.2.0
+
+---
+ pkg/executor/build.go   | 2 +-
+ pkg/image/image_util.go | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/pkg/executor/build.go b/pkg/executor/build.go
+index 17f7753..04d0f0f 100644
+--- a/pkg/executor/build.go
++++ b/pkg/executor/build.go
+@@ -609,7 +609,7 @@ func DoBuild(opts *config.KanikoOptions) (v1.Image, error) {
+ 			return nil, err
+ 		}
+ 		configFile.OS = runtime.GOOS
+-		configFile.Architecture = runtime.GOARCH
++		configFile.Architecture = os.Getenv("ARCHITECTURE")
+ 		sourceImage, err = mutate.ConfigFile(sourceImage, configFile)
+ 		if err != nil {
+ 			return nil, err
+diff --git a/pkg/image/image_util.go b/pkg/image/image_util.go
+index 44f2f39..03aae65 100644
+--- a/pkg/image/image_util.go
++++ b/pkg/image/image_util.go
+@@ -18,6 +18,7 @@ package image
+ 
+ import (
+ 	"fmt"
++	"os"
+ 	"path/filepath"
+ 	"runtime"
+ 	"strconv"
+@@ -202,6 +203,6 @@ func cachedImage(opts *config.KanikoOptions, image string) (v1.Image, error) {
+ func currentPlatform() v1.Platform {
+ 	return v1.Platform{
+ 		OS:           runtime.GOOS,
+-		Architecture: runtime.GOARCH,
++		Architecture: os.Getenv("ARCHITECTURE"),
+ 	}
+ }
+-- 
+2.23.0
+
